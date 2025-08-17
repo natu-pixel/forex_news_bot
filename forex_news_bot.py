@@ -9,10 +9,10 @@ import telebot
 from flask import Flask
 
 # === CONFIG FROM ENV VARIABLES ===
-BOT_TOKEN = os.environ.get("8318698327:AAHIUm8e3ty2mh8q-Crj7BoqIMyFlg7LcRk")
+BOT_TOKEN = os.environ.get("BOT_TOKEN")
 CHAT_ID = int(os.environ.get("CHAT_ID"))
-EMAIL = os.environ.get("natikuzmi@gmail.com")
-PASSWORD = os.environ.get("2Y5drzMD@r@52X5")
+EMAIL = os.environ.get("EMAIL")
+PASSWORD = os.environ.get("PASSWORD")
 
 bot = telebot.TeleBot(BOT_TOKEN)
 MAJOR_CURRENCIES = ["USD", "EUR", "GBP", "JPY", "CAD", "AUD", "NZD", "CHF"]
@@ -99,5 +99,6 @@ schedule_alerts()
 while True:
     schedule.run_pending()
     time.sleep(30)
+
 
 
