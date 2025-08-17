@@ -8,22 +8,16 @@ import threading
 import telebot
 from flask import Flask
 
-import time
-
-# Wait 5–10 seconds before sending startup message
-time.sleep(10)
-try:
-    bot.send_message(CHAT_ID, "✅ Telegram bot is running and connected to this group!")
-except Exception as e:
-    print("Failed to send startup message:", e)
-
 # === CONFIG FROM ENV VARIABLES ===
 BOT_TOKEN = os.environ.get("BOT_TOKEN")
-CHAT_ID = int(os.environ.get("CHAT_ID"))
+CHAT_ID = int(os.environ.get("CHAT_ID"))  # group ID
 EMAIL = os.environ.get("EMAIL")
 PASSWORD = os.environ.get("PASSWORD")
 
+# === CREATE TELEGRAM BOT ===
 bot = telebot.TeleBot(BOT_TOKEN)
+
+# === MAJOR CURRENCIES ===
 MAJOR_CURRENCIES = ["USD", "EUR", "GBP", "JPY", "CAD", "AUD", "NZD", "CHF"]
 
 # === FLASK SERVER TO KEEP RENDER ALIVE ===
@@ -97,8 +91,14 @@ def schedule_alerts():
                             send_alert, event=event, minutes_before=minutes_before
                         )
                         print(f"Scheduled: {event['title']} ({event['country']}) {minutes_before}m before")
-        # Send test message on startup
-        bot.send_message(CHAT_ID, "✅ Telegram bot is running and connected to this group!")
+        # Send startup test message after 10 seconds delay
+        time.sleep(10)
+        try:
+            bot.send_message(CHAT_ID, "✅ Telegram bot is running and connected to this group!")
+            print("✅ Startup message sent.")
+        except Exception as e:
+            print("Failed to send startup message:", e)
+
     except Exception as e:
         print("Error scheduling alerts:", e)
 
@@ -108,7 +108,3 @@ schedule_alerts()
 while True:
     schedule.run_pending()
     time.sleep(30)
-
-
-
-
