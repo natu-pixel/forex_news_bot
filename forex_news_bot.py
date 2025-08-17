@@ -91,18 +91,21 @@ def schedule_alerts():
                             send_alert, event=event, minutes_before=minutes_before
                         )
                         print(f"Scheduled: {event['title']} ({event['country']}) {minutes_before}m before")
-        # Send startup test message after 10 seconds delay
-        time.sleep(10)
-        try:
-            bot.send_message(CHAT_ID, "✅ Telegram bot is running and connected to this group!")
-            print("✅ Startup message sent.")
-        except Exception as e:
-            print("Failed to send startup message:", e)
-
     except Exception as e:
         print("Error scheduling alerts:", e)
 
 schedule_alerts()
+
+# === RELIABLE STARTUP MESSAGE ===
+def send_startup_message():
+    time.sleep(15)  # wait 15 seconds for network readiness
+    try:
+        bot.send_message(CHAT_ID, "✅ Telegram bot is running and connected to this group!")
+        print("✅ Startup message sent.")
+    except Exception as e:
+        print("Failed to send startup message:", e)
+
+threading.Thread(target=send_startup_message).start()
 
 # === MAIN LOOP ===
 while True:
