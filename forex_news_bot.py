@@ -1,43 +1,35 @@
+# forex_news_bot.py
 import os
 import requests
 import time
-import schedule
 import datetime
+import schedule
+import threading
 import telebot
 from flask import Flask
-import os
-import threading
 
+# === CONFIG FROM ENV VARIABLES ===
+BOT_TOKEN = os.environ.get("8318698327:AAHIUm8e3ty2mh8q-Crj7BoqIMyFlg7LcRk")
+CHAT_ID = int(os.environ.get("-1002786950182"))  # group ID
+EMAIL = os.environ.get("natikuzmi@gmail.com")
+PASSWORD = os.environ.get("2Y5drzMD@r@52X5")
+
+bot = telebot.TeleBot(BOT_TOKEN)
+MAJOR_CURRENCIES = ["USD", "EUR", "GBP", "JPY", "CAD", "AUD", "NZD", "CHF"]
+
+# === FLASK SERVER TO KEEP RENDER ALIVE ===
 app = Flask(__name__)
 
 @app.route("/")
 def index():
-    return "Bot is running!"
+    return "Forex News Bot is running!"
 
 def run_flask():
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
 
-# Start Flask in a separate thread
 flask_thread = threading.Thread(target=run_flask)
 flask_thread.start()
-
-
-
-# === CONFIG FROM ENV VARIABLES ===
-BOT_TOKEN = "8318698327:AAHIUm8e3ty2mh8q-Crj7BoqIMyFlg7LcRk"
-CHAT_ID = "-1002786950182"  
-EMAIL = "natikuzmi@gmail.com"
-PASSWORD = "2Y5drzMD@r@52X5"
-
-bot = telebot.TeleBot(BOT_TOKEN)
-# Send test message on startup
-try:
-    bot.send_message(CHAT_ID, "✅ Telegram bot is running and connected to this group!")
-except Exception as e:
-    print("Failed to send test message:", e)
-
-MAJOR_CURRENCIES = ["USD", "EUR", "GBP", "JPY", "CAD", "AUD", "NZD", "CHF"]
 
 # === MYFXBOOK API FUNCTIONS ===
 def login():
@@ -64,7 +56,20 @@ Impact: {event['impact']}
 Time: {event['date']}
 ⏰ Starts in {minutes_before} minutes
 """
-    bot.send_message(CHAT_ID, msg.strip())
+    try:
+        bot.send_message(CHAT_ID, msg.strip())
+    except Exception as e:
+        print("Failed to send alert:", e)
+
+# === HEARTBEAT FUNCTION ===
+def heartbeat():
+    try:
+        bot.send_message(CHAT_ID, "💓 Bot is alive and running!")
+    except Exception as e:
+        print("Failed to send heartbeat:", e)
+
+# Schedule heartbeat every 3 hours
+schedule.every(3).hours.do(heartbeat)
 
 # === SCHEDULE ALERTS ===
 def schedule_alerts():
@@ -83,14 +88,14 @@ def schedule_alerts():
                             send_alert, event=event, minutes_before=minutes_before
                         )
                         print(f"Scheduled: {event['title']} ({event['country']}) {minutes_before}m before")
+        # Send test message on startup
+        bot.send_message(CHAT_ID, "✅ Telegram bot is running and connected to this group!")
     except Exception as e:
         print("Error scheduling alerts:", e)
 
-# === MAIN LOOP ===
 schedule_alerts()
+
+# === MAIN LOOP ===
 while True:
     schedule.run_pending()
     time.sleep(30)
-
-
-
