@@ -10,7 +10,7 @@ from flask import Flask
 
 # === CONFIG FROM ENV VARIABLES ===
 BOT_TOKEN = os.environ.get("8318698327:AAHIUm8e3ty2mh8q-Crj7BoqIMyFlg7LcRk")
-CHAT_ID = int(os.environ.get("-1002786950182"))  # group ID
+CHAT_ID = int(os.environ.get("-1002786950182")) 
 EMAIL = os.environ.get("natikuzmi@gmail.com")
 PASSWORD = os.environ.get("2Y5drzMD@r@52X5")
 
@@ -99,3 +99,4 @@ schedule_alerts()
 while True:
     schedule.run_pending()
     time.sleep(30)
+
