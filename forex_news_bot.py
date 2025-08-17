@@ -4,6 +4,25 @@ import time
 import schedule
 import datetime
 import telebot
+from flask import Flask
+import os
+import threading
+
+app = Flask(__name__)
+
+@app.route("/")
+def index():
+    return "Bot is running!"
+
+def run_flask():
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
+
+# Start Flask in a separate thread
+flask_thread = threading.Thread(target=run_flask)
+flask_thread.start()
+
+
 
 # === CONFIG FROM ENV VARIABLES ===
 BOT_TOKEN = "8318698327:AAHIUm8e3ty2mh8q-Crj7BoqIMyFlg7LcRk"
@@ -66,4 +85,5 @@ schedule_alerts()
 while True:
     schedule.run_pending()
     time.sleep(30)
+
 
