@@ -7,7 +7,7 @@ import telebot
 
 # === CONFIG FROM ENV VARIABLES ===
 BOT_TOKEN = "8318698327:AAHIUm8e3ty2mh8q-Crj7BoqIMyFlg7LcRk"
-CHAT_ID = "920157645"  
+CHAT_ID = "-1002786950182"  
 EMAIL = "natikuzmi@gmail.com"
 PASSWORD = "2Y5drzMD@r@52X5"
 
@@ -66,3 +66,4 @@ schedule_alerts()
 while True:
     schedule.run_pending()
     time.sleep(30)
+
