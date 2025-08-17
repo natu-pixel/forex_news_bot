@@ -31,6 +31,12 @@ EMAIL = "natikuzmi@gmail.com"
 PASSWORD = "2Y5drzMD@r@52X5"
 
 bot = telebot.TeleBot(BOT_TOKEN)
+# Send test message on startup
+try:
+    bot.send_message(CHAT_ID, "✅ Telegram bot is running and connected to this group!")
+except Exception as e:
+    print("Failed to send test message:", e)
+
 MAJOR_CURRENCIES = ["USD", "EUR", "GBP", "JPY", "CAD", "AUD", "NZD", "CHF"]
 
 # === MYFXBOOK API FUNCTIONS ===
@@ -85,5 +91,6 @@ schedule_alerts()
 while True:
     schedule.run_pending()
     time.sleep(30)
+
 
 
